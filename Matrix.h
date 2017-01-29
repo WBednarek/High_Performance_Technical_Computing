@@ -9,6 +9,7 @@ class Matrix : private std::vector<std::vector<double> > {
 
 
 public:
+    std::vector<double> column;
     using std::vector<std::vector<double> >::operator[];
 
     Matrix();

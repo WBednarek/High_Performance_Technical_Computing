@@ -19,7 +19,7 @@ ExplicitUpwindScheme::~ExplicitUpwindScheme() {
 void ExplicitUpwindScheme::solve(int setNumber) {
     try {
 
-        std::cout << "Explicit upwid scheme solution runs and matrix is initialised\n";
+        std::cout << "Explicit upwind scheme solution runs and matrix is initialised\n";
 
         (*this).initializeSet(setNumber);
         explicitResutls = Matrix((*this).getMatrix());
@@ -47,6 +47,10 @@ Matrix ExplicitUpwindScheme::getUpwindMatrix() {
 
 std::string ExplicitUpwindScheme::getName() {
     return methodName;
+}
+
+std::vector<double> ExplicitUpwindScheme::getLastExplicitMatrixColumn() {
+    return explicitResutls.getColumn(numberOfTimePoints - 1);
 }
 
 

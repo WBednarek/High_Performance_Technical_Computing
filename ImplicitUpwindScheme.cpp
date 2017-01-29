@@ -53,3 +53,8 @@ Matrix ImplicitUpwindScheme::getImplicitUpwindMatrix() {
 std::string ImplicitUpwindScheme::getName() {
     return methodName;
 }
+
+std::vector<double> ImplicitUpwindScheme::getLastImplicitMatrixColumn() {
+    return implicitResults.getColumn(numberOfTimePoints - 1);
+}
+

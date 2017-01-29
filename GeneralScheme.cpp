@@ -185,6 +185,7 @@ void GeneralScheme::solve(int numberOfBoundaryConditionSet) {
         } else {
             std::cout << "Matrix is not initialised\n";
         }
+
     }
 
     catch (std::exception &e) {
@@ -198,6 +199,12 @@ void GeneralScheme::solve(int numberOfBoundaryConditionSet) {
 Matrix GeneralScheme::getMatrix() {
     return matrixOfResults;
 }
+
+std::vector<double> GeneralScheme::getLastMatrixColumn() {
+    return matrixOfResults.getColumn(numberOfTimePoints - 1);
+}
+
+
 
 
 

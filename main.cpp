@@ -12,8 +12,6 @@
 #include "GeneralScheme.h"
 #include "ExplicitUpwindScheme.h"
 #include "ImplicitUpwindScheme.h"
-#include "Lax_Wendroff.h"
-#include "Richtmyer_multi_step.h"
 #include "Display.h"
 
 
@@ -40,6 +38,12 @@ private:
     CharT m_Separator;
 };
 
+
+template<typename T>
+std::ostream &operator<<(std::ostream &out, const std::vector<T> &v) {
+    std::copy(v.begin(), v.end(), std::ostream_iterator<T>(out, "\n"));
+    return out;
+}
 
 std::string getCurrentPath() {
     char charCurrentPath[1024];
@@ -72,27 +76,18 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
                                               initialSettings[3], initialSettings[4]);
     implicitUpwindScheme.solve(numberOfBoundaryConditionSet);
 
-    Lax_Wendroff laxWendroff(initialSettings[0], initialSettings[1], initialSettings[2], initialSettings[3],
-                             initialSettings[4]);
-    laxWendroff.solve(numberOfBoundaryConditionSet);
-
-    Richtmyer_multi_step solutionRichtmyer(initialSettings[0], initialSettings[1], initialSettings[2],
-                                           initialSettings[3], initialSettings[4]);
-    solutionRichtmyer.solve(numberOfBoundaryConditionSet);
 
 
     std::ofstream osGeneralScheme;
     std::ofstream osUpwindScheme;
     std::ofstream osImplicitScheme;
-    std::ofstream osLaxFile;
-    std::ofstream osRichtmyer;
+
 
     //Operation helps to plot charts in programs such as Exel. Setting type of decimal separator depending on current geographical location. In some countries comma in default separator in numbers in others dot
     osGeneralScheme.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
     osUpwindScheme.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
     osImplicitScheme.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
-    osLaxFile.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
-    osRichtmyer.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
+
 
     std::stringstream streams[initialSettings.size()];
 
@@ -118,17 +113,7 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
             streams[4].str() + typeOfExtension;
     const char *CharImplicitUpwindSchemeFileName = implicitUpwindSchemeFileName.c_str();
 
-    std::string LaxWendroffFileName =
-            path + getInitialBoundaryConditionName(numberOfBoundaryConditionSet) + "_" + laxWendroff.getName() +
-            "Results_t=" + streams[2].str() + "_points=" + streams[3].str() + "_CFL=" + streams[4].str() +
-            typeOfExtension;
-    const char *CharLaxWendroffFileName = LaxWendroffFileName.c_str();
 
-    std::string solutionRichtmyerFileName =
-            path + getInitialBoundaryConditionName(numberOfBoundaryConditionSet) + "_" + solutionRichtmyer.getName() +
-            "Results_t=" + streams[2].str() + "_points=" + streams[3].str() + "_CFL=" + streams[4].str() +
-            typeOfExtension;
-    const char *CharSolutionRichtmyerFileName = solutionRichtmyerFileName.c_str();
 
     //std::string path = "C:/Users/Domowy/Desktop/Results/";
     //Open/create file with selected extension. It clold be for instance exel files extensions (.xls; .xlsx).
@@ -136,8 +121,7 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
     osUpwindScheme.open(CharUpwindSchemeFileName);
 
     osImplicitScheme.open(CharImplicitUpwindSchemeFileName);
-    osLaxFile.open(CharLaxWendroffFileName);
-    osRichtmyer.open(CharSolutionRichtmyerFileName);
+
 
 /*
 	osUpwindScheme.open(path+ getInitialBoundaryConditionName(numberOfBoundaryConditionSet) + "_" + upwindScheme.getName() + "Results_t=" + streams[2].str() + "_points=" + streams[3].str() + "_CFL=" + streams[4].str() + typeOfExtension);
@@ -153,21 +137,23 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
     osRichtmyer.open(path + getInitialBoundaryConditionName(numberOfBoundaryConditionSet) + "_" + solutionRichtmyer.getName() + "Results_t=" + std::to_string((int)initialSettings[2]) + "_points=" + std::to_string((int)initialSettings[3]) + "_CFL=" + std::to_string(initialSettings[4]) + typeOfExtension);
 */
     //Saving schemes calculated results
-    osGeneralScheme << general.getMatrix();
 
 
-    osUpwindScheme << upwindScheme.getUpwindMatrix();
-    osImplicitScheme << implicitUpwindScheme.getImplicitUpwindMatrix();
-    osLaxFile << laxWendroff.getLax_WendroffdMatrix();
-    osRichtmyer << solutionRichtmyer.getRichtmyer_multi_stepdMatrix();
+    osGeneralScheme << general.getLastMatrixColumn();
+
+
+    osUpwindScheme << upwindScheme.getLastExplicitMatrixColumn();
+    osImplicitScheme << implicitUpwindScheme.getLastImplicitMatrixColumn();
+
+    /* osGeneralScheme  << general.getLastMatrixColumn();
+   osUpwindScheme  << upwindScheme.getLastExplicitMatrixColumn();
+   osImplicitScheme << implicitUpwindScheme.getLastImplicitMatrixColumn();
+*/
 
     //Closing all opened streams at the end
     osGeneralScheme.close();
-
     osUpwindScheme.close();
     osImplicitScheme.close();
-    osLaxFile.close();
-    osRichtmyer.close();
 
 
 }
@@ -233,7 +219,7 @@ int main(int argc, char *argv[]) {
     timeOfEnd = MPI_Wtime();
     double programExecutionTime = timeOfEnd - timeOfStart;
 
-    cout << "Total time of execution is: " << programExecutionTime << endl;
+    cout << "Total time of program execution is: " << programExecutionTime << endl;
 
     return 0;
 

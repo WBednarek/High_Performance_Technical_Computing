@@ -28,8 +28,5 @@ std::string display::getInitialBoundaryConditionName(int &numberOfBoundaryCondit
 }
 
 //Overloaded operator << for easy loading vector to file
-template<typename T>
-std::ostream &operator<<(std::ostream &out, const std::vector<T> &v) {
-    std::copy(v.begin(), v.end(), std::ostream_iterator<T>(out, "\n"));
-    return out;
-}
+
+

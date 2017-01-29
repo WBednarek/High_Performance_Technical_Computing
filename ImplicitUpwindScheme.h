@@ -40,5 +40,8 @@ public:
     @return name of  Implicit Upwind Scheme class
     */
     virtual std::string getName();
+
+
+    std::vector<double> getLastImplicitMatrixColumn();
 };
 

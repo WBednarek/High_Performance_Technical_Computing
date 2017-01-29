@@ -48,8 +48,9 @@ int Matrix::getNumOfColumns() const {
 }
 
 
+
 std::vector<double> &Matrix::getRow(int rowNumber) {
-    std::vector<double> tmp;
+    static std::vector<double> tmp;
 
     for (int i = 0; i < (*this).getNumOfColumns(); ++i) {
         tmp.push_back((*this)[rowNumber][i]);
@@ -60,13 +61,13 @@ std::vector<double> &Matrix::getRow(int rowNumber) {
 
 
 std::vector<double> &Matrix::getColumn(int columnNumber) {
-    std::vector<double> tmp;
+
 
     for (int i = 0; i < (*this).getNumOfRows(); ++i) {
-        tmp.push_back((*this)[i][columnNumber]);
+        column.push_back((*this)[i][columnNumber]);
     }
 
-    return tmp;
+    return column;
 }
 
 

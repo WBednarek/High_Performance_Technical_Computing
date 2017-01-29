@@ -6,7 +6,6 @@
 #include <iostream>
 #include <algorithm>
 #include "Matrix.h"
-
 #include "MathFunctions.h"
 
 /**
@@ -26,7 +25,9 @@ protected:
     double CFL; //Courant number
     double xMin; //Lower boundary of space domain
     double xMax; //Upper boundary of space domain
-    Matrix matrixOfResults; //Matrix which stores Analytical solution results
+    Matrix matrixOfResults;
+protected:
+    //Matrix which stores Analytical solution results
     double dt; // Time step for solution
     double dx; // Space step
     double time; // Time of simulation
@@ -147,6 +148,16 @@ public:
 
     */
     virtual void solve(int setNumber);
+
+
+    /**
+  @brief Getting last matrix column which is General scheme solution
+
+  @return Last Column of calculated Matrix
+
+  */
+    std::vector<double> getLastMatrixColumn();
+
 
 
 };

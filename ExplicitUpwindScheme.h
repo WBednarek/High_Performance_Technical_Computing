@@ -47,6 +47,8 @@ public:
     */
     virtual std::string getName();
 
+    std::vector<double> getLastExplicitMatrixColumn();
+
 };
 
 
