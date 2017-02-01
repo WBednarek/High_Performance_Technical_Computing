@@ -5,6 +5,7 @@ Default constructor
 */
 
 GeneralScheme::GeneralScheme() {
+
 }
 
 GeneralScheme::~GeneralScheme() {
@@ -15,7 +16,7 @@ GeneralScheme::~GeneralScheme() {
 GeneralScheme::GeneralScheme(double xMin, double xMax, double time, double numberOfSpacePoints, double CFL)
         : xMin(xMin), xMax(xMax), time(time), numberOfSpacePoints(numberOfSpacePoints), CFL(CFL),
           isSetInitialised(false), isAnaliticalSolutionSolved(false), name("GeneralScheme") {
-
+    //int GeneralScheme::u = 0;
     (*this).dt = (*this).calculateDtValue();
     (*this).dx = (*this).calculateDxValue();
     (*this).numberOfTimePoints = std::ceil((time) / (((*this).CFL * (*this).dx) / u));
@@ -35,9 +36,9 @@ double GeneralScheme::calculateDxValue() {
 }
 
 
-double GeneralScheme::getDx() {
-    return dx;
-}
+//double GeneralScheme::getDx() {
+//    return dx;
+//}
 
 double GeneralScheme::initializationFunction(int numberOfSet, double functionValue) {
     switch (numberOfSet) {
@@ -47,6 +48,9 @@ double GeneralScheme::initializationFunction(int numberOfSet, double functionVal
         case 2:
             return std::exp((-1.0) * std::pow(functionValue, 2));
             break;
+        default:
+            std::cout << "There is no such choice using first condition set" << std::endl;
+            return (MathFunctions::sign(functionValue) + 1);
     }
 
 
@@ -61,6 +65,7 @@ double GeneralScheme::solutionFunctionAnalytical(int numberOfSet, double actualS
             return 0.5 * std::exp((-1.0) * std::pow(actualSpaceValue - 1.75 * actualTimeValue, 2));
             break;
         default:
+            return 0.5 * (MathFunctions::sign(actualSpaceValue - 1.75 * actualTimeValue) + 1);
             break;
     }
 }
@@ -80,7 +85,7 @@ void GeneralScheme::calculateNorms(Matrix &toCalculateError) {
     double normInf = errorVector.at(normInfiniteValue1);
     */
     normInfiniteValue = 0;
-    for (int i = 0; i < errorVector.size(); ++i) {
+    for (unsigned int i = 0; i < errorVector.size(); ++i) {
         if (abs(normInfiniteValue) < abs(errorVector.at(i))) {
             normInfiniteValue = abs(errorVector.at(i));
         }
@@ -101,7 +106,7 @@ void GeneralScheme::calculateNorms(Matrix &toCalculateError) {
     norms.push_back(dx);
 
     toCalculateError.resizeMat(numberOfSpacePoints, numberOfTimePoints + 1);
-    for (int i = 0; i < norms.size(); ++i) {
+    for (unsigned int i = 0; i < norms.size(); ++i) {
         //Adding norms results to last matrix colunm
         toCalculateError[i][numberOfTimePoints] = norms.at(i);
     }

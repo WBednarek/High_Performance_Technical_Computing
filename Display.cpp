@@ -22,6 +22,7 @@ std::string display::getInitialBoundaryConditionName(int &numberOfBoundaryCondit
             return "Exp";
             break;
         default:
+            return "Sign";
             break;
     }
 

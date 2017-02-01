@@ -38,7 +38,7 @@ public:
     @return Matrix with calculated  Explicit Upwind Scheme
 
     */
-    Matrix getUpwindMatrix();
+    /* Matrix getUpwindMatrix();*/
 
     /**
     @brief Virtual method to returns name of ExplicitUpwindScheme class

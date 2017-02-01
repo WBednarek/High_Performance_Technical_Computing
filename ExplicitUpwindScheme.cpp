@@ -24,6 +24,7 @@ void ExplicitUpwindScheme::solve(int setNumber) {
         (*this).initializeSet(setNumber);
         explicitResutls = Matrix((*this).getMatrix());
 
+
         for (int j = 0; j < numberOfTimePoints - 1; ++j) {
             for (int i = 1; i < numberOfSpacePoints; ++i) {
                 explicitResutls[i][j + 1] = (explicitResutls[i][j] -
@@ -41,9 +42,9 @@ void ExplicitUpwindScheme::solve(int setNumber) {
     }
 }
 
-Matrix ExplicitUpwindScheme::getUpwindMatrix() {
+/*Matrix ExplicitUpwindScheme::getUpwindMatrix() {
     return explicitResutls;
-}
+}*/
 
 std::string ExplicitUpwindScheme::getName() {
     return methodName;

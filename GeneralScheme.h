@@ -21,16 +21,16 @@ class GeneralScheme {
 protected:
 
     static const double u = 1.75; //Const variable to of u value
-    int numberOfSpacePoints; //Variable stores number of Space points for initializing Matrix size
-    double CFL; //Courant number
     double xMin; //Lower boundary of space domain
     double xMax; //Upper boundary of space domain
+    double time; // Time of simulation
+    int numberOfSpacePoints; //Variable stores number of Space points for initializing Matrix size
+    double CFL; //Courant number
     Matrix matrixOfResults;
-protected:
     //Matrix which stores Analytical solution results
     double dt; // Time step for solution
     double dx; // Space step
-    double time; // Time of simulation
+
     int numberOfTimePoints; // Number of time points for initializing vetor
     bool isSetInitialised; //Checking if initial boundary conditions is initialized
     bool isAnaliticalSolutionSolved; ////Checking if Analitical Solution is Solved
@@ -42,6 +42,7 @@ protected:
     std::string name;
 
 public:
+
     GeneralScheme();
 
     GeneralScheme(
@@ -51,7 +52,8 @@ public:
             double numberOfSpacePoints,
             double CFL);
 
-    ~GeneralScheme();
+
+    virtual ~GeneralScheme();
 
     /**
     @brief Calculating initial time point value
@@ -72,7 +74,8 @@ public:
 
     @return Actual time step value
     */
-    double getDx();
+
+//    double getDx();
 
 
     /**

@@ -6,6 +6,13 @@ project(High_Performance_Technical_Computing)
 find_package(MPI REQUIRED)
 include_directories(${MPI_INCLUDE_PATH})
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+
+#[[
+Usefull flags: -Wall -pedantic -Wextra -Weffc++ the last checking if code is written accorting to books:
+"Effective C++" and "More Effective C++" written by Scott Meyers
+]]
+
 set(SOURCE_FILES
         Display.cpp
         Display.h
