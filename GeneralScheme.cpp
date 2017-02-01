@@ -16,7 +16,7 @@ GeneralScheme::~GeneralScheme() {
 GeneralScheme::GeneralScheme(double xMin, double xMax, double time, double numberOfSpacePoints, double CFL)
         : xMin(xMin), xMax(xMax), time(time), numberOfSpacePoints(numberOfSpacePoints), CFL(CFL),
           isSetInitialised(false), isAnaliticalSolutionSolved(false), name("GeneralScheme") {
-    //int GeneralScheme::u = 0;
+
     (*this).dt = (*this).calculateDtValue();
     (*this).dx = (*this).calculateDxValue();
     (*this).numberOfTimePoints = std::ceil((time) / (((*this).CFL * (*this).dx) / u));
