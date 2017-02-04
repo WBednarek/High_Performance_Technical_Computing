@@ -31,7 +31,7 @@ set(SOURCE_FILES
         Matrix.cpp
         Matrix.h
         Richtmyer_multi_step.cpp
-        Richtmyer_multi_step.h)
+        Richtmyer_multi_step.h ExplicitUpwindParallel.cpp ExplicitUpwindParallel.h)
 
 add_executable(High_Performance_Technical_Computing ${SOURCE_FILES})
 

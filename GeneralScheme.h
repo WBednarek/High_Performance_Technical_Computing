@@ -27,6 +27,8 @@ protected:
     int numberOfSpacePoints; //Variable stores number of Space points for initializing Matrix size
     double CFL; //Courant number
     Matrix matrixOfResults;
+
+protected:
     //Matrix which stores Analytical solution results
     double dt; // Time step for solution
     double dx; // Space step
@@ -112,12 +114,13 @@ public:
     double solutionFunctionAnalytical(int numberOfSet, double actualSpace, double actualTime);
 
     /**
-    @brief Method returns class Matrix where Analitical solution could be stored
+    @brief Method returns matrix from class Matrix where Analitical solution is stored
 
     @return Matrix with calculated Analytical scheme
 
     */
-    Matrix getMatrix();
+    const Matrix &getMatrix() const;
+
 
     /**
     @brief Method calcutales three norms in given matrix for last time step. Norm infinite, One norm and Two norm
@@ -128,6 +131,8 @@ public:
     @return Matrix with calculated Analytical scheme
 
     */
+
+
     void calculateNorms(Matrix &toCalculateError);
 
     void put_timeValues();

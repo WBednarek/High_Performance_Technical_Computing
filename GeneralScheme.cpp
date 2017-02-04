@@ -201,12 +201,13 @@ void GeneralScheme::solve(int numberOfBoundaryConditionSet) {
 }
 
 
-Matrix GeneralScheme::getMatrix() {
-    return matrixOfResults;
-}
 
 std::vector<double> GeneralScheme::getLastMatrixColumn() {
     return matrixOfResults.getColumn(numberOfTimePoints - 1);
+}
+
+const Matrix &GeneralScheme::getMatrix() const {
+    return matrixOfResults;
 }
 
 

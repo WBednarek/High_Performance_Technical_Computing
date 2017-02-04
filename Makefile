@@ -150,6 +150,33 @@ Display.cpp.s:
 	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/Display.cpp.s
 .PHONY : Display.cpp.s
 
+ExplicitUpwindParallel.o: ExplicitUpwindParallel.cpp.o
+
+.PHONY : ExplicitUpwindParallel.o
+
+# target to build an object file
+ExplicitUpwindParallel.cpp.o:
+	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/ExplicitUpwindParallel.cpp.o
+.PHONY : ExplicitUpwindParallel.cpp.o
+
+ExplicitUpwindParallel.i: ExplicitUpwindParallel.cpp.i
+
+.PHONY : ExplicitUpwindParallel.i
+
+# target to preprocess a source file
+ExplicitUpwindParallel.cpp.i:
+	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/ExplicitUpwindParallel.cpp.i
+.PHONY : ExplicitUpwindParallel.cpp.i
+
+ExplicitUpwindParallel.s: ExplicitUpwindParallel.cpp.s
+
+.PHONY : ExplicitUpwindParallel.s
+
+# target to generate assembly for a file
+ExplicitUpwindParallel.cpp.s:
+	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/ExplicitUpwindParallel.cpp.s
+.PHONY : ExplicitUpwindParallel.cpp.s
+
 ExplicitUpwindScheme.o: ExplicitUpwindScheme.cpp.o
 
 .PHONY : ExplicitUpwindScheme.o
@@ -378,6 +405,9 @@ help:
 	@echo "... Display.o"
 	@echo "... Display.i"
 	@echo "... Display.s"
+	@echo "... ExplicitUpwindParallel.o"
+	@echo "... ExplicitUpwindParallel.i"
+	@echo "... ExplicitUpwindParallel.s"
 	@echo "... ExplicitUpwindScheme.o"
 	@echo "... ExplicitUpwindScheme.i"
 	@echo "... ExplicitUpwindScheme.s"

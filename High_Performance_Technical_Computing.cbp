@@ -98,6 +98,12 @@
 		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/Display.h">
 			<Option target="High_Performance_Technical_Computing"/>
 		</Unit>
+		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/ExplicitUpwindParallel.cpp">
+			<Option target="High_Performance_Technical_Computing"/>
+		</Unit>
+		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/ExplicitUpwindParallel.h">
+			<Option target="High_Performance_Technical_Computing"/>
+		</Unit>
 		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/ExplicitUpwindScheme.cpp">
 			<Option target="High_Performance_Technical_Computing"/>
 		</Unit>

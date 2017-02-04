@@ -1,27 +1,28 @@
 #include <mpi/mpi.h>
-#include "ExplicitUpwindScheme.h"
+#include "ExplicitUpwindParallel.h"
 
 
-ExplicitUpwindScheme::ExplicitUpwindScheme(double xMin,
-                                           double xMax,
-                                           double time,
-                                           double numberOfSpacePoints,
-                                           double CFL) : GeneralScheme::GeneralScheme(xMin, xMax, time,
-                                                                                      numberOfSpacePoints, CFL),
-                                                         methodName("ExplicitUpwindScheme") {
+ExplicitUpwindParallel::ExplicitUpwindParallel(double xMin,
+                                               double xMax,
+                                               double time,
+                                               double numberOfSpacePoints,
+                                               double CFL) : GeneralScheme::GeneralScheme(xMin, xMax, time,
+                                                                                          numberOfSpacePoints, CFL),
+                                                             methodName("ExplicitUpwindScheme") {
 
 }
 
 
-ExplicitUpwindScheme::~ExplicitUpwindScheme() {
+ExplicitUpwindParallel::~ExplicitUpwindParallel() {
 }
 
 
-void ExplicitUpwindScheme::solve(int setNumber) {
+void ExplicitUpwindParallel::solve(int setNumber) {
     try {
 
         std::cout << "Explicit upwind scheme solution runs and matrix is initialised\n";
-
+        MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
+        MPI_Comm_size(MPI_COMM_WORLD, &npes);
 
         double timeOfStart;
         double timeOfEnd;
@@ -55,11 +56,11 @@ void ExplicitUpwindScheme::solve(int setNumber) {
     return explicitResutls;
 }*/
 
-std::string ExplicitUpwindScheme::getName() {
+std::string ExplicitUpwindParallel::getName() {
     return methodName;
 }
 
-std::vector<double> ExplicitUpwindScheme::getLastExplicitMatrixColumn() {
+std::vector<double> ExplicitUpwindParallel::getLastExplicitMatrixColumn() {
     return explicitResutls.getColumn(numberOfTimePoints - 1);
 }
 
