@@ -13,6 +13,7 @@
 #include "ExplicitUpwindScheme.h"
 #include "Display.h"
 #include "ExplicitUpwindParallel.h"
+#include "ImplicitParallel.h"
 
 
 using std::vector;
@@ -76,6 +77,11 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
                                     initialSettings[4]);
     parallel.solve(numberOfBoundaryConditionSet);
 
+    ImplicitParallel implicitParallel(initialSettings[0], initialSettings[1], initialSettings[2], initialSettings[3],
+                                      initialSettings[4]);
+    implicitParallel.solve(numberOfBoundaryConditionSet);
+
+
     /*
      *
     ImplicitUpwindScheme implicitUpwindScheme(initialSettings[0], initialSettings[1], initialSettings[2],
@@ -103,6 +109,7 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
     std::ofstream osGeneralScheme;
     std::ofstream osUpwindScheme;
     std::ofstream osParallel;
+    std::ofstream osImplicitParallel;
 
 
 
@@ -110,6 +117,7 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
     osGeneralScheme.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
     osUpwindScheme.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
     osParallel.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
+    osImplicitParallel.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
 
 
 
@@ -138,6 +146,12 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
             typeOfExtension;
     const char *CharExplicitParallelFileName = ExplicitParallel.c_str();
 
+    std::string implicitParallelFileName =
+            path + getInitialBoundaryConditionName(numberOfBoundaryConditionSet) + "_" + implicitParallel.getName() +
+            "Results_t=" + streams[2].str() + "_points=" + streams[3].str() + "_CFL=" + streams[4].str() +
+            typeOfExtension;
+    const char *charImplicitParallelFileName = implicitParallelFileName.c_str();
+
 
 
 
@@ -146,6 +160,7 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
     osGeneralScheme.open(CharGeneralSchemeFileName);
     osUpwindScheme.open(CharUpwindSchemeFileName);
     osParallel.open(CharExplicitParallelFileName);
+    osImplicitParallel.open(charImplicitParallelFileName);
 
 
 
@@ -169,13 +184,14 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
     MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
 
     if (myRank == 0) {
-        osGeneralScheme << general.getLastMatrixColumn();
+        osGeneralScheme << general.getResults();
 
 
         osUpwindScheme << upwindScheme.getLastExplicitMatrixColumn();
 
-        cout << parallel.getGatherResults().size();
+        //cout << parallel.getGatherResults().size();
         osParallel << parallel.getGatherResults();
+        osImplicitParallel << implicitParallel.getResults();
 
 
         /* osGeneralScheme  << general.getLastMatrixColumn();
@@ -185,7 +201,7 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
 
         //Closing all opened streams at the end
         osGeneralScheme.close();
-        osUpwindScheme.close();
+        osImplicitParallel.close();
         osParallel.close();
 
     }

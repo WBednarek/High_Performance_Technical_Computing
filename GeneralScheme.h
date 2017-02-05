@@ -26,7 +26,7 @@ protected:
     double time; // Time of simulation
     int numberOfSpacePoints; //Variable stores number of Space points for initializing Matrix size
     double CFL; //Courant number
-    Matrix explicitResutls;
+    Matrix matrixOfResults;
 
 protected:
     //Matrix which stores Analytical solution results
@@ -119,7 +119,7 @@ public:
     @return Matrix with calculated Analytical scheme
 
     */
-    const Matrix &getMatrix() const;
+    virtual const Matrix &getMatrix() const;
 
 
     /**
@@ -164,7 +164,7 @@ public:
   @return Last Column of calculated Matrix
 
   */
-    std::vector<double> getLastMatrixColumn();
+    virtual std::vector<double> getResults();
 
 
 

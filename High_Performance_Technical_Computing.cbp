@@ -116,6 +116,12 @@
 		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/GeneralScheme.h">
 			<Option target="High_Performance_Technical_Computing"/>
 		</Unit>
+		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/ImplicitParallel.cpp">
+			<Option target="High_Performance_Technical_Computing"/>
+		</Unit>
+		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/ImplicitParallel.h">
+			<Option target="High_Performance_Technical_Computing"/>
+		</Unit>
 		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/ImplicitUpwindScheme.cpp">
 			<Option target="High_Performance_Technical_Computing"/>
 		</Unit>

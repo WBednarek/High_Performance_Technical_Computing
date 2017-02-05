@@ -20,7 +20,7 @@ ImplicitUpwindScheme::~ImplicitUpwindScheme() {
 void ImplicitUpwindScheme::solve(int setNumber) {
     try {
 
-        std::cout << "Implicit upwid scheme solution runs and matrix is initialised\n";
+        std::cout << methodName << " scheme solution runs and matrix is initialised\n";
 
 
         (*this).initializeSet(setNumber);

@@ -231,6 +231,33 @@ GeneralScheme.cpp.s:
 	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/GeneralScheme.cpp.s
 .PHONY : GeneralScheme.cpp.s
 
+ImplicitParallel.o: ImplicitParallel.cpp.o
+
+.PHONY : ImplicitParallel.o
+
+# target to build an object file
+ImplicitParallel.cpp.o:
+	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/ImplicitParallel.cpp.o
+.PHONY : ImplicitParallel.cpp.o
+
+ImplicitParallel.i: ImplicitParallel.cpp.i
+
+.PHONY : ImplicitParallel.i
+
+# target to preprocess a source file
+ImplicitParallel.cpp.i:
+	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/ImplicitParallel.cpp.i
+.PHONY : ImplicitParallel.cpp.i
+
+ImplicitParallel.s: ImplicitParallel.cpp.s
+
+.PHONY : ImplicitParallel.s
+
+# target to generate assembly for a file
+ImplicitParallel.cpp.s:
+	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/ImplicitParallel.cpp.s
+.PHONY : ImplicitParallel.cpp.s
+
 ImplicitUpwindScheme.o: ImplicitUpwindScheme.cpp.o
 
 .PHONY : ImplicitUpwindScheme.o
@@ -414,6 +441,9 @@ help:
 	@echo "... GeneralScheme.o"
 	@echo "... GeneralScheme.i"
 	@echo "... GeneralScheme.s"
+	@echo "... ImplicitParallel.o"
+	@echo "... ImplicitParallel.i"
+	@echo "... ImplicitParallel.s"
 	@echo "... ImplicitUpwindScheme.o"
 	@echo "... ImplicitUpwindScheme.i"
 	@echo "... ImplicitUpwindScheme.s"

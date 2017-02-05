@@ -106,7 +106,7 @@ void ExplicitUpwindParallel::solve(int setNumber) {
         //calculateNorms((*this).explicitResutls);
         double timeOfEnd = MPI_Wtime();
         double totalTime = timeOfEnd - timeOfStart;
-        std::cout << "Explicit upwind parallel time is: " << totalTime << std::endl;
+        std::cout << methodName << " time is: " << totalTime << std::endl;
 
 
 
@@ -134,8 +134,3 @@ std::vector<double> ExplicitUpwindParallel::getLastExplicitParallelMatrixColumn(
 const std::vector<double> &ExplicitUpwindParallel::getGatherResults() const {
     return gatherResults;
 }
-
-
-
-
-
