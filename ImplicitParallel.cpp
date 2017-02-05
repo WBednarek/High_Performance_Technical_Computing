@@ -26,7 +26,7 @@ void ImplicitParallel::solve(int setNumber)
         std::cout << methodName << " solution runs and matrix is initialised\n";
         MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
         MPI_Comm_size(MPI_COMM_WORLD, &numOfProc);
-        implicitResults = Matrix(numberOfSpacePoints, numberOfTimePoints);
+        implicitResultsParallel = Matrix(numberOfSpacePoints, numberOfTimePoints);
         double timeOfStart = MPI_Wtime();
 
         lastNode = numOfProc - 1;
@@ -48,7 +48,7 @@ void ImplicitParallel::solve(int setNumber)
         {
 
             actualValue = (i * (*this).dx) + xMin;
-            implicitResults[i][0] = (1.0 / 2.0) * (*this).initializationFunction(1, actualValue);
+            implicitResultsParallel[i][0] = (1.0 / 2.0) * (*this).initializationFunction(1, actualValue);
 
         }
 
@@ -56,7 +56,7 @@ void ImplicitParallel::solve(int setNumber)
         {
             for (int i = 0; i < numberOfTimePoints; ++i)
             {
-                implicitResults[0][i] = 0;
+                implicitResultsParallel[0][i] = 0;
             }
         }
 
@@ -66,7 +66,7 @@ void ImplicitParallel::solve(int setNumber)
             for (int i = 0; i < numberOfTimePoints; ++i)
             {
 
-                implicitResults[numberOfSpacePoints - 1][i] = 0;
+                implicitResultsParallel[numberOfSpacePoints - 1][i] = 0;
             }
 
         }
@@ -82,7 +82,7 @@ void ImplicitParallel::solve(int setNumber)
             {
                 double localTmp;
                 MPI_Recv(&localTmp, 1, MPI_DOUBLE, myRank - 1, 1, MPI_COMM_WORLD, &status);
-                implicitResults[limitLow][j + 1] = (-implicitResults[limitLow][j] -
+                implicitResultsParallel[limitLow][j + 1] = (-implicitResultsParallel[limitLow][j] -
                                                     CFL * localTmp) / -(1 + CFL);
             }
 
@@ -90,13 +90,13 @@ void ImplicitParallel::solve(int setNumber)
             for (int i = limitLow + 1; i < limitHigh; ++i)
             {
 
-                implicitResults[i][j + 1] = (-implicitResults[i][j] -
-                                             CFL * implicitResults[i - 1][j]) / -(1 + CFL);
+                implicitResultsParallel[i][j + 1] = (-implicitResultsParallel[i][j] -
+                                                     CFL * implicitResultsParallel[i - 1][j]) / -(1 + CFL);
             }
 
             if (lastNode != myRank)
             {
-                MPI_Send(&implicitResults[limitHigh - 1][j], 1, MPI_DOUBLE, myRank + 1, 1, MPI_COMM_WORLD);
+                MPI_Send(&implicitResultsParallel[limitHigh - 1][j], 1, MPI_DOUBLE, myRank + 1, 1, MPI_COMM_WORLD);
 
             }
 
@@ -109,7 +109,7 @@ void ImplicitParallel::solve(int setNumber)
 
         for (int i = 0; i < numberOfSpacePoints; ++i)
         {
-            tempForReduce[i] = implicitResults[i][numberOfTimePoints - 1];
+            tempForReduce[i] = implicitResultsParallel[i][numberOfTimePoints - 1];
         }
 
 
@@ -145,10 +145,10 @@ std::string ImplicitParallel::getName()
 
 std::vector<double> ImplicitParallel::getLastExplicitParallelMatrixColumn()
 {
-    return implicitResults.getColumn(numberOfTimePoints - 1);
+    return implicitResultsParallel.getColumn(numberOfTimePoints - 1);
 }
 
-const std::vector<double> &ImplicitParallel::getResults() const
+const std::vector<double> &ImplicitParallel::getImplicitParallelResults() const
 {
     return gatherResults;
 }

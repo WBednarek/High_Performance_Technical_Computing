@@ -1,5 +1,6 @@
 #pragma once
 
+#include <mpi/mpi.h>
 #include "GeneralScheme.h"
 
 class ImplicitUpwindScheme :
@@ -42,6 +43,6 @@ public:
     virtual std::string getName();
 
 
-    std::vector<double> getLastImplicitMatrixColumn();
+    virtual std::vector<double> getResults();
 };
 

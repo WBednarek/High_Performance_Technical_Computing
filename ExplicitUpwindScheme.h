@@ -1,5 +1,6 @@
 #pragma once
 
+#include <mpi/mpi.h>
 #include "GeneralScheme.h"
 
 

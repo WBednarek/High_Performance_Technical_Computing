@@ -14,6 +14,7 @@
 #include "Display.h"
 #include "ExplicitUpwindParallel.h"
 #include "ImplicitParallel.h"
+#include "ImplicitUpwindScheme.h"
 
 
 using std::vector;
@@ -69,9 +70,9 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
                                           initialSettings[3], initialSettings[4]);
     general.solve(numberOfBoundaryConditionSet);
 
-    ExplicitUpwindScheme upwindScheme(initialSettings[0], initialSettings[1], initialSettings[2], initialSettings[3],
-                                      initialSettings[4]);
-    upwindScheme.solve(numberOfBoundaryConditionSet);
+    ExplicitUpwindScheme explicitScheme(initialSettings[0], initialSettings[1], initialSettings[2], initialSettings[3],
+                                        initialSettings[4]);
+    explicitScheme.solve(numberOfBoundaryConditionSet);
 
     ExplicitUpwindParallel parallel(initialSettings[0], initialSettings[1], initialSettings[2], initialSettings[3],
                                     initialSettings[4]);
@@ -82,12 +83,15 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
     implicitParallel.solve(numberOfBoundaryConditionSet);
 
 
-    /*
-     *
     ImplicitUpwindScheme implicitUpwindScheme(initialSettings[0], initialSettings[1], initialSettings[2],
                                               initialSettings[3], initialSettings[4]);
     implicitUpwindScheme.solve(numberOfBoundaryConditionSet);
- std::ofstream osImplicitScheme;
+
+
+
+    /*
+     *
+
 
      osImplicitScheme.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
 
@@ -107,7 +111,10 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
 
 
     std::ofstream osGeneralScheme;
-    std::ofstream osUpwindScheme;
+    std::ofstream osExplicitScheme;
+    std::ofstream osImplicitScheme;
+
+
     std::ofstream osParallel;
     std::ofstream osImplicitParallel;
 
@@ -115,7 +122,10 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
 
     //Operation helps to plot charts in programs such as Exel. Setting type of decimal separator depending on current geographical location. In some countries comma in default separator in numbers in others dot
     osGeneralScheme.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
-    osUpwindScheme.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
+    osExplicitScheme.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
+    osImplicitScheme.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
+
+
     osParallel.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
     osImplicitParallel.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
 
@@ -135,7 +145,7 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
     const char *CharGeneralSchemeFileName = generalSchemeFileName.c_str();
 
     std::string UpwindSchemeFileName =
-            path + getInitialBoundaryConditionName(numberOfBoundaryConditionSet) + "_" + upwindScheme.getName() +
+            path + getInitialBoundaryConditionName(numberOfBoundaryConditionSet) + "_" + explicitScheme.getName() +
             "Results_t=" + streams[2].str() + "_points=" + streams[3].str() + "_CFL=" + streams[4].str() +
             typeOfExtension;
     const char *CharUpwindSchemeFileName = UpwindSchemeFileName.c_str();
@@ -152,15 +162,27 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
             typeOfExtension;
     const char *charImplicitParallelFileName = implicitParallelFileName.c_str();
 
+    std::string implicitFileName =
+            path + getInitialBoundaryConditionName(numberOfBoundaryConditionSet) + "_" +
+            implicitUpwindScheme.getName() +
+            "Results_t=" + streams[2].str() + "_points=" + streams[3].str() + "_CFL=" + streams[4].str() +
+            typeOfExtension;
+    const char *charImplicitFileName = implicitFileName.c_str();
+
 
 
 
     //std::string path = "C:/Users/Domowy/Desktop/Results/";
     //Open/create file with selected extension. It clold be for instance exel files extensions (.xls; .xlsx).
+    //Single
     osGeneralScheme.open(CharGeneralSchemeFileName);
-    osUpwindScheme.open(CharUpwindSchemeFileName);
+    osExplicitScheme.open(CharUpwindSchemeFileName);
+    osImplicitScheme.open(charImplicitFileName);
+
+    //Parallel
     osParallel.open(CharExplicitParallelFileName);
     osImplicitParallel.open(charImplicitParallelFileName);
+
 
 
     //Saving schemes calculated results
@@ -171,17 +193,21 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
     if (myRank == 0) {
         osGeneralScheme << general.getResults();
 
-
-        osUpwindScheme << upwindScheme.getLastExplicitMatrixColumn();
-
-        //cout << parallel.getGatherResults().size();
+        //Explicit
+        osExplicitScheme << explicitScheme.getLastExplicitMatrixColumn();
         osParallel << parallel.getGatherResults();
-        osImplicitParallel << implicitParallel.getResults();
+
+        //Implicit
+        osImplicitParallel << implicitParallel.getImplicitParallelResults();
+        osImplicitScheme << implicitUpwindScheme.getResults();
 
 
 
         //Closing all opened streams at the end
         osGeneralScheme.close();
+        osExplicitScheme.close();
+        osImplicitScheme.close();
+
         osImplicitParallel.close();
         osParallel.close();
 

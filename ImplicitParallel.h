@@ -13,7 +13,7 @@ class ImplicitParallel : public GeneralScheme
 {
 
     std::string methodName;
-    Matrix implicitResults;
+    Matrix implicitResultsParallel;
     int myRank;
     int numOfProc;
     double lastNode;
@@ -60,7 +60,7 @@ public:
 
     std::vector<double> getLastExplicitParallelMatrixColumn();
 
-    virtual const std::vector<double> &getResults() const;
+    const std::vector<double> &getImplicitParallelResults() const;
 
 
 };

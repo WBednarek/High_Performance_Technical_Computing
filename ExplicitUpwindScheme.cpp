@@ -1,4 +1,4 @@
-#include <mpi/mpi.h>
+
 #include "ExplicitUpwindScheme.h"
 
 
