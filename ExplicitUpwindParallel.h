@@ -11,7 +11,7 @@
 class ExplicitUpwindParallel : public GeneralScheme {
 
     std::string methodName;
-    Matrix explicitResutls;
+    Matrix explicitParallelResults;
     int myRank;
     int worldSize;
     double lastNode;

@@ -78,14 +78,17 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
                                     initialSettings[4]);
     parallel.solve(numberOfBoundaryConditionSet);
 
+
+    ImplicitUpwindScheme implicitUpwindScheme(initialSettings[0], initialSettings[1], initialSettings[2],
+                                              initialSettings[3], initialSettings[4]);
+    implicitUpwindScheme.solve(numberOfBoundaryConditionSet);
+
     ImplicitParallel implicitParallel(initialSettings[0], initialSettings[1], initialSettings[2], initialSettings[3],
                                       initialSettings[4]);
     implicitParallel.solve(numberOfBoundaryConditionSet);
 
 
-    ImplicitUpwindScheme implicitUpwindScheme(initialSettings[0], initialSettings[1], initialSettings[2],
-                                              initialSettings[3], initialSettings[4]);
-    implicitUpwindScheme.solve(numberOfBoundaryConditionSet);
+
 
 
 
@@ -109,7 +112,7 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
     */
 
 
-
+    //Generating open files
     std::ofstream osGeneralScheme;
     std::ofstream osExplicitScheme;
     std::ofstream osImplicitScheme;
@@ -137,7 +140,7 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
         streams[i] << (int) initialSettings[i];
     }
 
-
+    //Because I use c++98 I need to convert strings to chars
     std::string generalSchemeFileName =
             path + getInitialBoundaryConditionName(numberOfBoundaryConditionSet) + "_" + general.getName() +
             "Results_t=" + streams[2].str() + "_points=" + streams[3].str() + "_CFL=" + streams[4].str() +
@@ -231,7 +234,7 @@ int main(int argc, char *argv[]) {
     //Number of boundary condition set. 1 for sign boundary set type ; 2 for exp boundary set type
 //    vector<int> setNumber;
 //    setNumber.push_back(1);
-    int setNumber = 1;
+    int setNumber = 2;
 
 
     //Initial setings values are respectively: xMin, xMax, time, number of spacePoints, CFL value

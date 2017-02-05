@@ -48,7 +48,7 @@ void ImplicitParallel::solve(int setNumber)
         {
 
             actualValue = (i * (*this).dx) + xMin;
-            implicitResultsParallel[i][0] = (1.0 / 2.0) * (*this).initializationFunction(1, actualValue);
+            implicitResultsParallel[i][0] = (1.0 / 2.0) * (*this).initializationFunction(setNumber, actualValue);
 
         }
 

@@ -32,7 +32,7 @@ void ImplicitUpwindScheme::solve(int setNumber) {
         for (int i = 0; i < numberOfSpacePoints; ++i)
         {
             actualValue = (i * (*this).dx) + xMin;
-            implicitResults[i][0] = (1.0 / 2.0) * (*this).initializationFunction(1, actualValue);
+            implicitResults[i][0] = (1.0 / 2.0) * (*this).initializationFunction(setNumber, actualValue);
 
         }
 

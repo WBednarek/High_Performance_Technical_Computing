@@ -24,7 +24,7 @@ void ExplicitUpwindParallel::solve(int setNumber) {
         MPI_Comm_size(MPI_COMM_WORLD, &worldSize);
 
         double timeOfStart = MPI_Wtime();
-        explicitResutls = Matrix(numberOfSpacePoints, numberOfTimePoints);
+        explicitParallelResults = Matrix(numberOfSpacePoints, numberOfTimePoints);
         lastNode = worldSize - 1;
         if (numberOfSpacePoints % worldSize != 0) {
             throw "error";
@@ -42,13 +42,13 @@ void ExplicitUpwindParallel::solve(int setNumber) {
         for (int i = limitLow; i < limitHigh; ++i) {
 
             actualValue = (i * (*this).dx) + xMin;
-            explicitResutls[i][0] = (1.0 / 2.0) * (*this).initializationFunction(1, actualValue);
+            explicitParallelResults[i][0] = (1.0 / 2.0) * (*this).initializationFunction(2, actualValue);
 
         }
 
         if (myRank == 0) {
             for (int i = 0; i < numberOfTimePoints; ++i) {
-                explicitResutls[0][i] = 0;
+                explicitParallelResults[0][i] = 0;
             }
         }
 
@@ -56,7 +56,7 @@ void ExplicitUpwindParallel::solve(int setNumber) {
 
             for (int i = 0; i < numberOfTimePoints; ++i) {
 
-                explicitResutls[numberOfSpacePoints - 1][i] = 0;
+                explicitParallelResults[numberOfSpacePoints - 1][i] = 0;
             }
 
         }
@@ -70,19 +70,20 @@ void ExplicitUpwindParallel::solve(int setNumber) {
             if (myRank != 0) {
                 double localTmp;
                 MPI_Recv(&localTmp, 1, MPI_DOUBLE, myRank - 1, 1, MPI_COMM_WORLD, &status);
-                explicitResutls[limitLow][j + 1] = (explicitResutls[limitLow][j] -
-                                                    CFL * (explicitResutls[limitLow][j] - localTmp));
+                explicitParallelResults[limitLow][j + 1] = (explicitParallelResults[limitLow][j] -
+                                                            CFL * (explicitParallelResults[limitLow][j] - localTmp));
             }
 
 
             for (int i = limitLow + 1; i < limitHigh; ++i) {
 
-                explicitResutls[i][j + 1] = (explicitResutls[i][j] -
-                                             CFL * (explicitResutls[i][j] - explicitResutls[i - 1][j]));
+                explicitParallelResults[i][j + 1] = (explicitParallelResults[i][j] -
+                                                     CFL * (explicitParallelResults[i][j] -
+                                                            explicitParallelResults[i - 1][j]));
             }
 
             if (lastNode != myRank) {
-                MPI_Send(&explicitResutls[limitHigh - 1][j], 1, MPI_DOUBLE, myRank + 1, 1, MPI_COMM_WORLD);
+                MPI_Send(&explicitParallelResults[limitHigh - 1][j], 1, MPI_DOUBLE, myRank + 1, 1, MPI_COMM_WORLD);
 
             }
 
@@ -94,7 +95,7 @@ void ExplicitUpwindParallel::solve(int setNumber) {
         std::vector<double> tempForReduce(numberOfSpacePoints);
 
         for (int i = 0; i < numberOfSpacePoints; ++i) {
-            tempForReduce[i] = explicitResutls[i][numberOfTimePoints - 1];
+            tempForReduce[i] = explicitParallelResults[i][numberOfTimePoints - 1];
         }
 
 
@@ -128,7 +129,7 @@ std::string ExplicitUpwindParallel::getName() {
 }
 
 std::vector<double> ExplicitUpwindParallel::getLastExplicitParallelMatrixColumn() {
-    return explicitResutls.getColumn(numberOfTimePoints - 1);
+    return explicitParallelResults.getColumn(numberOfTimePoints - 1);
 }
 
 const std::vector<double> &ExplicitUpwindParallel::getGatherResults() const {
