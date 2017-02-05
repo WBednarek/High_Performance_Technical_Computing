@@ -12,6 +12,7 @@
 #include "GeneralScheme.h"
 #include "ExplicitUpwindScheme.h"
 #include "Display.h"
+#include "ExplicitUpwindParallel.h"
 
 
 using std::vector;
@@ -71,6 +72,10 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
                                       initialSettings[4]);
     upwindScheme.solve(numberOfBoundaryConditionSet);
 
+    ExplicitUpwindParallel parallel(initialSettings[0], initialSettings[1], initialSettings[2], initialSettings[3],
+                                    initialSettings[4]);
+    parallel.solve(numberOfBoundaryConditionSet);
+
     /*
      *
     ImplicitUpwindScheme implicitUpwindScheme(initialSettings[0], initialSettings[1], initialSettings[2],
@@ -97,12 +102,14 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
 
     std::ofstream osGeneralScheme;
     std::ofstream osUpwindScheme;
+    std::ofstream osParallel;
 
 
 
     //Operation helps to plot charts in programs such as Exel. Setting type of decimal separator depending on current geographical location. In some countries comma in default separator in numbers in others dot
     osGeneralScheme.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
     osUpwindScheme.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
+    osParallel.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
 
 
 
@@ -111,6 +118,7 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
     for (unsigned int i = 0; i < initialSettings.size(); ++i) {
         streams[i] << (int) initialSettings[i];
     }
+
 
     std::string generalSchemeFileName =
             path + getInitialBoundaryConditionName(numberOfBoundaryConditionSet) + "_" + general.getName() +
@@ -124,6 +132,11 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
             typeOfExtension;
     const char *CharUpwindSchemeFileName = UpwindSchemeFileName.c_str();
 
+    std::string ExplicitParallel =
+            path + getInitialBoundaryConditionName(numberOfBoundaryConditionSet) + "_" + parallel.getName() +
+            "Results_t=" + streams[2].str() + "_points=" + streams[3].str() + "_CFL=" + streams[4].str() +
+            typeOfExtension;
+    const char *CharExplicitParallelFileName = ExplicitParallel.c_str();
 
 
 
@@ -132,6 +145,7 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
     //Open/create file with selected extension. It clold be for instance exel files extensions (.xls; .xlsx).
     osGeneralScheme.open(CharGeneralSchemeFileName);
     osUpwindScheme.open(CharUpwindSchemeFileName);
+    osParallel.open(CharExplicitParallelFileName);
 
 
 
@@ -151,21 +165,31 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
 */
     //Saving schemes calculated results
 
+    int myRank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
 
-    osGeneralScheme << general.getLastMatrixColumn();
+    if (myRank == 0) {
+        osGeneralScheme << general.getLastMatrixColumn();
 
 
-    osUpwindScheme << upwindScheme.getLastExplicitMatrixColumn();
+        osUpwindScheme << upwindScheme.getLastExplicitMatrixColumn();
+
+        cout << parallel.getGatherResults().size();
+        osParallel << parallel.getGatherResults();
 
 
-    /* osGeneralScheme  << general.getLastMatrixColumn();
-   osUpwindScheme  << upwindScheme.getLastExplicitMatrixColumn();
-   osImplicitScheme << implicitUpwindScheme.getLastImplicitMatrixColumn();
-*/
+        /* osGeneralScheme  << general.getLastMatrixColumn();
+       osUpwindScheme  << upwindScheme.getLastExplicitMatrixColumn();
+       osImplicitScheme << implicitUpwindScheme.getLastImplicitMatrixColumn();
+    */
 
-    //Closing all opened streams at the end
-    osGeneralScheme.close();
-    osUpwindScheme.close();
+        //Closing all opened streams at the end
+        osGeneralScheme.close();
+        osUpwindScheme.close();
+        osParallel.close();
+
+    }
+
 
 
 
@@ -251,7 +275,7 @@ int main(int argc, char *argv[]) {
     double programExecutionTime = timeOfEnd - timeOfStart;
 
     cout << "Total time of program execution is: " << programExecutionTime << endl;
-
+    MPI_Finalize();
     return 0;
 
 }

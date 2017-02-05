@@ -14,7 +14,19 @@ class ExplicitUpwindParallel : public GeneralScheme {
     std::string methodName;
     Matrix explicitResutls;
     int myRank;
-    int npes;
+    int worldSize;
+    double lastNode;
+    double workAdditional;
+    double tmp;
+    double localLimit;
+    std::vector<double> gatherResults;
+public:
+    const std::vector<double> &getGatherResults() const;
+
+
+private:
+    MPI_Status status;
+
 
 public:
 
@@ -49,7 +61,10 @@ public:
     */
     virtual std::string getName();
 
-    std::vector<double> getLastExplicitMatrixColumn();
+    std::vector<double> getLastExplicitParallelMatrixColumn();
+
+
+
 
 };
 
