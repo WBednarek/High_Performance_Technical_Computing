@@ -1,5 +1,5 @@
 #include "GeneralScheme.h"
-
+#include <mpi/mpi.h>
 /**
 Default constructor
 */
@@ -106,10 +106,18 @@ void GeneralScheme::calculateNorms(Matrix &toCalculateError) {
     norms.push_back(dx);
 
     toCalculateError.resizeMat(numberOfSpacePoints, numberOfTimePoints + 1);
-    for (unsigned int i = 0; i < norms.size(); ++i) {
-        //Adding norms results to last matrix colunm
-        toCalculateError[i][numberOfTimePoints] = norms.at(i);
+    int myRank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
+    if (myRank == 0)
+    {
+        for (unsigned int i = 0; i < norms.size() - 1; ++i)
+        {
+            //Adding norms results to last matrix colunm
+            std::cout << "Norm " << i + 1 << ": " << norms.at(i) << std::endl;
+            toCalculateError[i][numberOfTimePoints] = norms.at(i);
+        }
     }
+
 
 
 }

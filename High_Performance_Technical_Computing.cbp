@@ -92,6 +92,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/CrankParallel.cpp">
+			<Option target="High_Performance_Technical_Computing"/>
+		</Unit>
+		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/CrankParallel.h">
+			<Option target="High_Performance_Technical_Computing"/>
+		</Unit>
 		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/Display.cpp">
 			<Option target="High_Performance_Technical_Computing"/>
 		</Unit>

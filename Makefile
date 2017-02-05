@@ -123,6 +123,33 @@ High_Performance_Technical_Computing/fast:
 	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/build
 .PHONY : High_Performance_Technical_Computing/fast
 
+CrankParallel.o: CrankParallel.cpp.o
+
+.PHONY : CrankParallel.o
+
+# target to build an object file
+CrankParallel.cpp.o:
+	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/CrankParallel.cpp.o
+.PHONY : CrankParallel.cpp.o
+
+CrankParallel.i: CrankParallel.cpp.i
+
+.PHONY : CrankParallel.i
+
+# target to preprocess a source file
+CrankParallel.cpp.i:
+	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/CrankParallel.cpp.i
+.PHONY : CrankParallel.cpp.i
+
+CrankParallel.s: CrankParallel.cpp.s
+
+.PHONY : CrankParallel.s
+
+# target to generate assembly for a file
+CrankParallel.cpp.s:
+	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/CrankParallel.cpp.s
+.PHONY : CrankParallel.cpp.s
+
 Display.o: Display.cpp.o
 
 .PHONY : Display.o
@@ -429,6 +456,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... High_Performance_Technical_Computing"
+	@echo "... CrankParallel.o"
+	@echo "... CrankParallel.i"
+	@echo "... CrankParallel.s"
 	@echo "... Display.o"
 	@echo "... Display.i"
 	@echo "... Display.s"

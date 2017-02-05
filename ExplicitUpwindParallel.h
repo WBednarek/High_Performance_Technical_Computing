@@ -13,8 +13,8 @@ class ExplicitUpwindParallel : public GeneralScheme {
     std::string methodName;
     Matrix explicitParallelResults;
     int myRank;
-    int worldSize;
-    double lastNode;
+    int numOfProc;
+    double lastProc;
     double workAdditional;
     double tmp;
     double localLimit;

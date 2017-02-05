@@ -28,7 +28,6 @@ protected:
     double CFL; //Courant number
     Matrix matrixOfResults;
 
-protected:
     //Matrix which stores Analytical solution results
     double dt; // Time step for solution
     double dx; // Space step

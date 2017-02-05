@@ -35,7 +35,7 @@ set(SOURCE_FILES
         ExplicitUpwindParallel.cpp
         ExplicitUpwindParallel.h
         ImplicitParallel.h
-        ImplicitParallel.cpp ExplicitUpwindParallel.cpp ExplicitUpwindParallel.h)
+        ImplicitParallel.cpp ExplicitUpwindParallel.cpp ExplicitUpwindParallel.h CrankParallel.cpp CrankParallel.h)
 
 add_executable(High_Performance_Technical_Computing ${SOURCE_FILES})
 

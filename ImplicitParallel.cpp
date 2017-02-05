@@ -118,7 +118,7 @@ void ImplicitParallel::solve(int setNumber)
 
 
         //GeneralScheme::solve(setNumber);
-        //calculateNorms((*this).explicitResutls);
+        calculateNorms((*this).implicitResultsParallel);
         double timeOfEnd = MPI_Wtime();
         double totalTime = timeOfEnd - timeOfStart;
         std::cout << methodName << " time is: " << totalTime << std::endl;

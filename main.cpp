@@ -15,6 +15,7 @@
 #include "ExplicitUpwindParallel.h"
 #include "ImplicitParallel.h"
 #include "ImplicitUpwindScheme.h"
+#include "CrankParallel.h"
 
 
 using std::vector;
@@ -87,6 +88,10 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
                                       initialSettings[4]);
     implicitParallel.solve(numberOfBoundaryConditionSet);
 
+    CrankParallel crankParallel(initialSettings[0], initialSettings[1], initialSettings[2], initialSettings[3],
+                                initialSettings[4]);
+    crankParallel.solve(numberOfBoundaryConditionSet);
+
 
 
 
@@ -120,6 +125,7 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
 
     std::ofstream osParallel;
     std::ofstream osImplicitParallel;
+    std::ofstream osCrankParallel;
 
 
 
@@ -131,6 +137,7 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
 
     osParallel.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
     osImplicitParallel.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
+    osCrankParallel.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
 
 
 
@@ -172,6 +179,13 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
             typeOfExtension;
     const char *charImplicitFileName = implicitFileName.c_str();
 
+    std::string crankFileName =
+            path + getInitialBoundaryConditionName(numberOfBoundaryConditionSet) + "_" +
+            crankParallel.getMethodName() +
+            "Results_t=" + streams[2].str() + "_points=" + streams[3].str() + "_CFL=" + streams[4].str() +
+            typeOfExtension;
+    const char *charcrankFileName = crankFileName.c_str();
+
 
 
 
@@ -185,6 +199,7 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
     //Parallel
     osParallel.open(CharExplicitParallelFileName);
     osImplicitParallel.open(charImplicitParallelFileName);
+    osCrankParallel.open(charcrankFileName);
 
 
 
@@ -205,6 +220,9 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
         osImplicitScheme << implicitUpwindScheme.getResults();
 
 
+        osCrankParallel << crankParallel.getCrankResutls();
+
+
 
         //Closing all opened streams at the end
         osGeneralScheme.close();
@@ -213,6 +231,8 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
 
         osImplicitParallel.close();
         osParallel.close();
+
+        osCrankParallel.close();
 
     }
 
@@ -249,11 +269,10 @@ int main(int argc, char *argv[]) {
 
     vector<double> courantNumberSet;
     courantNumberSet.push_back(0.5);
-    double courantNumber = 0.5;
+    double courantNumber = 0.7;
 
-    vector<double> pointsSet;
-    pointsSet.push_back(10000);
-    double numOfPoints = 10000;
+
+    double numOfPoints = 1000;
 
 
     double simulationTime = 5;
