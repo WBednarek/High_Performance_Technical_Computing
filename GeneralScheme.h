@@ -26,7 +26,7 @@ protected:
     double time; // Time of simulation
     int numberOfSpacePoints; //Variable stores number of Space points for initializing Matrix size
     double CFL; //Courant number
-    Matrix matrixOfResults;
+    Matrix explicitResutls;
 
 protected:
     //Matrix which stores Analytical solution results

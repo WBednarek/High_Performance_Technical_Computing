@@ -19,20 +19,17 @@ ExplicitUpwindScheme::~ExplicitUpwindScheme() {
 
 void ExplicitUpwindScheme::solve(int setNumber) {
     try {
-
+        double timeOfStart = MPI_Wtime();
         std::cout << "Explicit upwind scheme solution runs and matrix is initialised\n";
 
 
-        double timeOfStart;
-        double timeOfEnd;
+
 
 
         (*this).initializeSet(setNumber);
-        timeOfStart = MPI_Wtime();
+
         explicitResutls = Matrix((*this).getMatrix());
-        timeOfEnd = MPI_Wtime();
-        double programExecutionTime = timeOfEnd - timeOfStart;
-        std::cout << "Total time of initializing the same Matris is: " << programExecutionTime << std::endl;
+
 
         for (int j = 0; j < numberOfTimePoints - 1; ++j) {
             for (int i = 1; i < numberOfSpacePoints; ++i) {
@@ -41,6 +38,10 @@ void ExplicitUpwindScheme::solve(int setNumber) {
             }
 
         }
+        double timeOfSolutionsEnd = MPI_Wtime();
+        double solutionTime = timeOfSolutionsEnd - timeOfStart;
+        std::cout << "Single Explicit upwind scheme solution is: " << solutionTime << std::endl;
+
         GeneralScheme::solve(setNumber);
         calculateNorms((*this).explicitResutls);
 

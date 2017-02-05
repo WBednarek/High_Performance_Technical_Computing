@@ -21,7 +21,7 @@ GeneralScheme::GeneralScheme(double xMin, double xMax, double time, double numbe
     (*this).dx = (*this).calculateDxValue();
     (*this).numberOfTimePoints = std::ceil((time) / (((*this).CFL * (*this).dx) / u));
 
-    matrixOfResults = Matrix(numberOfSpacePoints, numberOfTimePoints);
+    explicitResutls = Matrix(numberOfSpacePoints, numberOfTimePoints);
     (*this).calculateDtValue();
 
 }
@@ -76,7 +76,7 @@ void GeneralScheme::calculateNorms(Matrix &toCalculateError) {
     errorVector.resize(toCalculateError.getNumOfRows());
     for (int i = 0; i < numberOfSpacePoints; ++i) {
         errorVector[i] =
-                toCalculateError[i][numberOfTimePoints - 1] - (*this).matrixOfResults[i][numberOfTimePoints - 1];
+                toCalculateError[i][numberOfTimePoints - 1] - (*this).explicitResutls[i][numberOfTimePoints - 1];
     }
     /*
     Second approach - quite complicated
@@ -119,7 +119,7 @@ void GeneralScheme::put_timeValues() {
 
     double actualValue = 0;
     for (int i = 0; i < numberOfTimePoints; ++i) {
-        matrixOfResults[0][i] = actualValue;
+        explicitResutls[0][i] = actualValue;
         actualValue += (*this).dt;
     }
 
@@ -136,20 +136,20 @@ void GeneralScheme::initializeSet(int setNumber) {
 
         double actualValue = xMin;
         for (int i = 0; i < numberOfSpacePoints; ++i) {
-            matrixOfResults[i][0] = (1.0 / 2.0) * (*this).initializationFunction(setNumber, actualValue);
+            explicitResutls[i][0] = (1.0 / 2.0) * (*this).initializationFunction(setNumber, actualValue);
             actualValue += (*this).dx;
         }
 
 
         if (setNumber == 1) {
             for (int i = 0; i < numberOfTimePoints; ++i) {
-                matrixOfResults[0][i] = 0;
-                matrixOfResults[numberOfSpacePoints - 1][i] = 1;
+                explicitResutls[0][i] = 0;
+                explicitResutls[numberOfSpacePoints - 1][i] = 1;
             }
         } else {
             for (int i = 0; i < numberOfTimePoints; ++i) {
-                matrixOfResults[0][i] = 0;
-                matrixOfResults[numberOfSpacePoints - 1][i] = 0;
+                explicitResutls[0][i] = 0;
+                explicitResutls[numberOfSpacePoints - 1][i] = 0;
             }
         }
 
@@ -177,7 +177,7 @@ void GeneralScheme::solve(int numberOfBoundaryConditionSet) {
             double actualTimeValue = dt;
             for (int i = 1; i < numberOfSpacePoints; ++i) {
                 for (int j = 1; j < numberOfTimePoints; ++j) {
-                    matrixOfResults[i][j] = solutionFunctionAnalytical(numberOfBoundaryConditionSet, actualSpaceValue,
+                    explicitResutls[i][j] = solutionFunctionAnalytical(numberOfBoundaryConditionSet, actualSpaceValue,
                                                                        actualTimeValue);
                     actualTimeValue += dt;
 
@@ -203,11 +203,11 @@ void GeneralScheme::solve(int numberOfBoundaryConditionSet) {
 
 
 std::vector<double> GeneralScheme::getLastMatrixColumn() {
-    return matrixOfResults.getColumn(numberOfTimePoints - 1);
+    return explicitResutls.getColumn(numberOfTimePoints - 1);
 }
 
 const Matrix &GeneralScheme::getMatrix() const {
-    return matrixOfResults;
+    return explicitResutls;
 }
 
 

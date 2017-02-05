@@ -23,8 +23,8 @@ void ExplicitUpwindParallel::solve(int setNumber) {
         MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
         MPI_Comm_size(MPI_COMM_WORLD, &worldSize);
 
-        double timeOfStart;
-        double timeOfEnd;
+        double timeOfStart = MPI_Wtime();
+        explicitResutls = Matrix(numberOfSpacePoints, numberOfTimePoints);
         lastNode = worldSize - 1;
         if (numberOfSpacePoints % worldSize != 0) {
             throw "error";
@@ -42,13 +42,13 @@ void ExplicitUpwindParallel::solve(int setNumber) {
         for (int i = limitLow; i < limitHigh; ++i) {
 
             actualValue = (i * (*this).dx) + xMin;
-            matrixOfResults[i][0] = (1.0 / 2.0) * (*this).initializationFunction(1, actualValue);
+            explicitResutls[i][0] = (1.0 / 2.0) * (*this).initializationFunction(1, actualValue);
 
         }
 
         if (myRank == 0) {
             for (int i = 0; i < numberOfTimePoints; ++i) {
-                matrixOfResults[0][i] = 0;
+                explicitResutls[0][i] = 0;
             }
         }
 
@@ -56,13 +56,13 @@ void ExplicitUpwindParallel::solve(int setNumber) {
 
             for (int i = 0; i < numberOfTimePoints; ++i) {
 
-                matrixOfResults[numberOfSpacePoints - 1][i] = 0;
+                explicitResutls[numberOfSpacePoints - 1][i] = 0;
             }
 
         }
 
 
-        explicitResutls = Matrix((*this).getMatrix());
+        //explicitResutls = Matrix((*this).getMatrix());
 
 
         for (int j = 0; j < numberOfTimePoints - 1; ++j) {
@@ -100,13 +100,13 @@ void ExplicitUpwindParallel::solve(int setNumber) {
 
         MPI_Reduce(&tempForReduce[0], &gatherResults[0], numberOfSpacePoints, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
-        std::cout << myRank << ": " << explicitResutls[6000][numberOfTimePoints - 1] << std::endl;
-        std::cout << myRank << ": " << gatherResults[6000] << " size: " << gatherResults.size() << std::endl;
 
 
         //GeneralScheme::solve(setNumber);
         //calculateNorms((*this).explicitResutls);
-
+        double timeOfEnd = MPI_Wtime();
+        double totalTime = timeOfEnd - timeOfStart;
+        std::cout << "Explicit upwind parallel time is: " << totalTime << std::endl;
 
 
 
