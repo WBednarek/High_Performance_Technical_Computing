@@ -1,6 +1,4 @@
-//
-// Created by wik on 05.02.17.
-//
+
 
 #include "CrankParallel.h"
 
@@ -34,121 +32,120 @@ CrankParallel::~CrankParallel()
 }
 
 
-void CrankParallel::ThomasAlgorithm_P_LUDecomposition(int mynode, int numnodes, int N, double *b,
+void CrankParallel::ThomasAlgorithm_P_LUDecomposition(int myCurrNode, int numberOfNodes, int N, double *b,
                                                       double *a, double *c, double *l, double *d)
 {
     int i;
-    int rows_local, local_offset;
-    double S[2][2], T[2][2], s1tmp, s2tmp;
-    MPI_Status status;
+    int rowsOfLocal, offsetLocal;
+    double S[2][2], T[2][2], s1TMPVal, s2TMPVal;
+    MPI_Status myStatus;
 
     for (i = 0; i < N; i++)
         l[i] = d[i] = 0.0;
 
     S[0][0] = S[1][1] = 1.0;
     S[1][0] = S[0][1] = 0.0;
-    rows_local = (int) floor(N / numnodes);
-    local_offset = mynode * rows_local;
+    rowsOfLocal = (int) floor(N / numberOfNodes);
+    offsetLocal = myCurrNode * rowsOfLocal;
 // Form local products of R_k matrices
-    if (mynode == 0)
+    if (myCurrNode == 0)
     {
-        s1tmp = a[local_offset] * S[0][0];
+        s1TMPVal = a[offsetLocal] * S[0][0];
         S[1][0] = S[0][0];
         S[1][1] = S[0][1];
-        S[0][1] = a[local_offset] * S[0][1];
-        S[0][0] = s1tmp;
-        for (i = 1; i < rows_local; i++)
+        S[0][1] = a[offsetLocal] * S[0][1];
+        S[0][0] = s1TMPVal;
+        for (i = 1; i < rowsOfLocal; i++)
         {
-            s1tmp = a[i + local_offset] * S[0][0] -
-                    b[i + local_offset - 1] * c[i + local_offset - 1] * S[1][0];
-            s2tmp = a[i + local_offset] * S[0][1] -
-                    b[i + local_offset - 1] * c[i + local_offset - 1] * S[1][1];
+            s1TMPVal = a[i + offsetLocal] * S[0][0] -
+                       b[i + offsetLocal - 1] * c[i + offsetLocal - 1] * S[1][0];
+            s2TMPVal = a[i + offsetLocal] * S[0][1] -
+                       b[i + offsetLocal - 1] * c[i + offsetLocal - 1] * S[1][1];
             S[1][0] = S[0][0];
             S[1][1] = S[0][1];
-            S[0][0] = s1tmp;
+            S[0][0] = s1TMPVal;
 
-            S[0][1] = s2tmp;
+            S[0][1] = s2TMPVal;
         }
     } else
     {
-        for (i = 0; i < rows_local; i++)
+        for (i = 0; i < rowsOfLocal; i++)
         {
-            s1tmp = a[i + local_offset] * S[0][0] -
-                    b[i + local_offset - 1] * c[i + local_offset - 1] * S[1][0];
-            s2tmp = a[i + local_offset] * S[0][1] -
-                    b[i + local_offset - 1] * c[i + local_offset - 1] * S[1][1];
+            s1TMPVal = a[i + offsetLocal] * S[0][0] -
+                       b[i + offsetLocal - 1] * c[i + offsetLocal - 1] * S[1][0];
+            s2TMPVal = a[i + offsetLocal] * S[0][1] -
+                       b[i + offsetLocal - 1] * c[i + offsetLocal - 1] * S[1][1];
             S[1][0] = S[0][0];
             S[1][1] = S[0][1];
-            S[0][0] = s1tmp;
-            S[0][1] = s2tmp;
+            S[0][0] = s1TMPVal;
+            S[0][1] = s2TMPVal;
         }
     }
-// Full-recursive doubling algorithm for distribution
-    for (i = 0; i <= log2(numnodes); i++)
+
+    for (i = 0; i <= log2(numberOfNodes); i++)
     {
-        if (mynode + pow(2, i) < numnodes)
-            MPI_Send(S, 4, MPI_DOUBLE, int(mynode + pow(2, i)), 0,
+        if (myCurrNode + pow(2, i) < numberOfNodes)
+            MPI_Send(S, 4, MPI_DOUBLE, int(myCurrNode + pow(2, i)), 0,
                      MPI_COMM_WORLD);
-        if (mynode - pow(2, i) >= 0)
+        if (myCurrNode - pow(2, i) >= 0)
         {
-            MPI_Recv(T, 4, MPI_DOUBLE, int(mynode - pow(2, i)), 0,
-                     MPI_COMM_WORLD, &status);
-            s1tmp = S[0][0] * T[0][0] + S[0][1] * T[1][0];
+            MPI_Recv(T, 4, MPI_DOUBLE, int(myCurrNode - pow(2, i)), 0,
+                     MPI_COMM_WORLD, &myStatus);
+            s1TMPVal = S[0][0] * T[0][0] + S[0][1] * T[1][0];
             S[0][1] = S[0][0] * T[0][1] + S[0][1] * T[1][1];
-            S[0][0] = s1tmp;
-            s1tmp = S[1][0] * T[0][0] + S[1][1] * T[1][0];
+            S[0][0] = s1TMPVal;
+            s1TMPVal = S[1][0] * T[0][0] + S[1][1] * T[1][0];
             S[1][1] = S[1][0] * T[0][1] + S[1][1] * T[1][1];
-            S[1][0] = s1tmp;
+            S[1][0] = s1TMPVal;
         }
     }
-//Calculate last d_k first so that it can be distributed,
-//and then do the distribution.
-    d[local_offset + rows_local - 1] = (S[0][0] + S[0][1]) /
+
+    d[offsetLocal + rowsOfLocal - 1] = (S[0][0] + S[0][1]) /
                                        (S[1][0] + S[1][1]);
-    if (mynode == 0)
+    if (myCurrNode == 0)
     {
-        MPI_Send(&d[local_offset + rows_local - 1], 1, MPI_DOUBLE,
+        MPI_Send(&d[offsetLocal + rowsOfLocal - 1], 1, MPI_DOUBLE,
                  1, 0, MPI_COMM_WORLD);
     } else
     {
-        MPI_Recv(&d[local_offset - 1], 1, MPI_DOUBLE, mynode - 1, 0,
-                 MPI_COMM_WORLD, &status);
-        if (mynode != numnodes - 1)
+        MPI_Recv(&d[offsetLocal - 1], 1, MPI_DOUBLE, myCurrNode - 1, 0,
+                 MPI_COMM_WORLD, &myStatus);
+        if (myCurrNode != numberOfNodes - 1)
 
-            MPI_Send(&d[local_offset + rows_local - 1], 1, MPI_DOUBLE,
-                     mynode + 1, 0, MPI_COMM_WORLD);
+            MPI_Send(&d[offsetLocal + rowsOfLocal - 1], 1, MPI_DOUBLE,
+                     myCurrNode + 1, 0, MPI_COMM_WORLD);
     }
 
-// Compute in parallel the local values of d_k and l_k
-    if (mynode == 0)
+
+    if (myCurrNode == 0)
     {
         l[0] = 0;
         d[0] = a[0];
-        for (i = 1; i < rows_local - 1; i++)
+        for (i = 1; i < rowsOfLocal - 1; i++)
         {
-            l[local_offset + i] = b[local_offset + i - 1] /
-                                  d[local_offset + i - 1];
-            d[local_offset + i] = a[local_offset + i] -
-                                  l[local_offset + i] * c[local_offset + i - 1];
+            l[offsetLocal + i] = b[offsetLocal + i - 1] /
+                                 d[offsetLocal + i - 1];
+            d[offsetLocal + i] = a[offsetLocal + i] -
+                                 l[offsetLocal + i] * c[offsetLocal + i - 1];
         }
-        l[local_offset + rows_local - 1] = b[local_offset + rows_local - 2] /
-                                           d[local_offset + rows_local - 2];
+        l[offsetLocal + rowsOfLocal - 1] = b[offsetLocal + rowsOfLocal - 2] /
+                                           d[offsetLocal + rowsOfLocal - 2];
     } else
     {
-        for (i = 0; i < rows_local - 1; i++)
+        for (i = 0; i < rowsOfLocal - 1; i++)
         {
-            l[local_offset + i] = b[local_offset + i - 1] /
-                                  d[local_offset + i - 1];
-            d[local_offset + i] = a[local_offset + i] -
-                                  l[local_offset + i] * c[local_offset + i - 1];
+            l[offsetLocal + i] = b[offsetLocal + i - 1] /
+                                 d[offsetLocal + i - 1];
+            d[offsetLocal + i] = a[offsetLocal + i] -
+                                 l[offsetLocal + i] * c[offsetLocal + i - 1];
         }
-        l[local_offset + rows_local - 1] = b[local_offset + rows_local - 2] /
-                                           d[local_offset + rows_local - 2];
+        l[offsetLocal + rowsOfLocal - 1] = b[offsetLocal + rowsOfLocal - 2] /
+                                           d[offsetLocal + rowsOfLocal - 2];
     }
 
-    /***************************************************************/
-    if (mynode > 0)
-        d[local_offset - 1] = 0;
+
+    if (myCurrNode > 0)
+        d[offsetLocal - 1] = 0;
     // Distribute d_k and l_k to all processes
     double *tmp = new double[N];
     for (i = 0; i < N; i++)
@@ -164,13 +161,13 @@ void CrankParallel::ThomasAlgorithm_P_LUDecomposition(int mynode, int numnodes, 
 /**
  *
  * @param N
- * @param l
- * @param d
+ * @param lStore
+ * @param dStore
  * @param c
  * @param x output
  * @param q
  */
-void CrankParallel::ThomasAlgorithm_P_solve(int N, double *l, double *d, double *c, double *q, double *x)
+void CrankParallel::ThomasAlgorithm_P_solve(int N, double *lStore, double *dStore, double *c, double *q, double *x)
 {
     int i;
     double *y = new double[N];
@@ -181,11 +178,11 @@ void CrankParallel::ThomasAlgorithm_P_solve(int N, double *l, double *d, double 
     /* Forward Substitution [L][y] = [q] */
     y[0] = q[0];
     for (i = 1; i < N; i++)
-        y[i] = q[i] - l[i] * y[i - 1];
+        y[i] = q[i] - lStore[i] * y[i - 1];
     /* Backward Substitution [U][x] = [y] */
-    x[N - 1] = y[N - 1] / d[N - 1];
+    x[N - 1] = y[N - 1] / dStore[N - 1];
     for (i = N - 2; i >= 0; i--)
-        x[i] = (y[i] - c[i] * x[i + 1]) / d[i];
+        x[i] = (y[i] - c[i] * x[i + 1]) / dStore[i];
 
     delete[] y;
     return;

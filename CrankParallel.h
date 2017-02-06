@@ -39,10 +39,10 @@ public:
 
     void solve(int setNumber);
 
-    void ThomasAlgorithm_P_LUDecomposition(int mynode, int numnodes, int N, double *b,
+    void ThomasAlgorithm_P_LUDecomposition(int myCurrNode, int numberOfNodes, int N, double *b,
                                            double *a, double *c, double *l, double *d);
 
-    void ThomasAlgorithm_P_solve(int N, double *l, double *d, double *c, double *x, double *q);
+    void ThomasAlgorithm_P_solve(int N, double *lStore, double *dStore, double *c, double *x, double *q);
 
     void CrankNicholson_RS(int N, double AR, double BR, double CR, double *y, double *q);
 

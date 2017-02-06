@@ -30,6 +30,7 @@ void ExplicitUpwindParallel::solve(int setNumber)
         double timeOfStart = MPI_Wtime();
         explicitParallelResults = Matrix(numberOfSpacePoints, numberOfTimePoints);
         lastProc = numOfProc - 1;
+
         if (numberOfSpacePoints % numOfProc != 0)
         {
             throw "error";
@@ -72,12 +73,10 @@ void ExplicitUpwindParallel::solve(int setNumber)
         }
 
 
-        //explicitResutls = Matrix((*this).getMatrix());
-
 
         for (int j = 0; j < numberOfTimePoints - 1; ++j)
         {
-
+            //All but first
             if (myRank != 0)
             {
                 double localTmp;
@@ -86,7 +85,7 @@ void ExplicitUpwindParallel::solve(int setNumber)
                                                             CFL * (explicitParallelResults[limitLow][j] - localTmp));
             }
 
-
+            //Each process calculates that
             for (int i = limitLow + 1; i < limitHigh; ++i)
             {
 

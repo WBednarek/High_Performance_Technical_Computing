@@ -312,33 +312,6 @@ ImplicitUpwindScheme.cpp.s:
 	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/ImplicitUpwindScheme.cpp.s
 .PHONY : ImplicitUpwindScheme.cpp.s
 
-Lax_Wendroff.o: Lax_Wendroff.cpp.o
-
-.PHONY : Lax_Wendroff.o
-
-# target to build an object file
-Lax_Wendroff.cpp.o:
-	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/Lax_Wendroff.cpp.o
-.PHONY : Lax_Wendroff.cpp.o
-
-Lax_Wendroff.i: Lax_Wendroff.cpp.i
-
-.PHONY : Lax_Wendroff.i
-
-# target to preprocess a source file
-Lax_Wendroff.cpp.i:
-	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/Lax_Wendroff.cpp.i
-.PHONY : Lax_Wendroff.cpp.i
-
-Lax_Wendroff.s: Lax_Wendroff.cpp.s
-
-.PHONY : Lax_Wendroff.s
-
-# target to generate assembly for a file
-Lax_Wendroff.cpp.s:
-	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/Lax_Wendroff.cpp.s
-.PHONY : Lax_Wendroff.cpp.s
-
 MathFunctions.o: MathFunctions.cpp.o
 
 .PHONY : MathFunctions.o
@@ -392,33 +365,6 @@ Matrix.s: Matrix.cpp.s
 Matrix.cpp.s:
 	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/Matrix.cpp.s
 .PHONY : Matrix.cpp.s
-
-Richtmyer_multi_step.o: Richtmyer_multi_step.cpp.o
-
-.PHONY : Richtmyer_multi_step.o
-
-# target to build an object file
-Richtmyer_multi_step.cpp.o:
-	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/Richtmyer_multi_step.cpp.o
-.PHONY : Richtmyer_multi_step.cpp.o
-
-Richtmyer_multi_step.i: Richtmyer_multi_step.cpp.i
-
-.PHONY : Richtmyer_multi_step.i
-
-# target to preprocess a source file
-Richtmyer_multi_step.cpp.i:
-	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/Richtmyer_multi_step.cpp.i
-.PHONY : Richtmyer_multi_step.cpp.i
-
-Richtmyer_multi_step.s: Richtmyer_multi_step.cpp.s
-
-.PHONY : Richtmyer_multi_step.s
-
-# target to generate assembly for a file
-Richtmyer_multi_step.cpp.s:
-	$(MAKE) -f CMakeFiles/High_Performance_Technical_Computing.dir/build.make CMakeFiles/High_Performance_Technical_Computing.dir/Richtmyer_multi_step.cpp.s
-.PHONY : Richtmyer_multi_step.cpp.s
 
 main.o: main.cpp.o
 
@@ -477,18 +423,12 @@ help:
 	@echo "... ImplicitUpwindScheme.o"
 	@echo "... ImplicitUpwindScheme.i"
 	@echo "... ImplicitUpwindScheme.s"
-	@echo "... Lax_Wendroff.o"
-	@echo "... Lax_Wendroff.i"
-	@echo "... Lax_Wendroff.s"
 	@echo "... MathFunctions.o"
 	@echo "... MathFunctions.i"
 	@echo "... MathFunctions.s"
 	@echo "... Matrix.o"
 	@echo "... Matrix.i"
 	@echo "... Matrix.s"
-	@echo "... Richtmyer_multi_step.o"
-	@echo "... Richtmyer_multi_step.i"
-	@echo "... Richtmyer_multi_step.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

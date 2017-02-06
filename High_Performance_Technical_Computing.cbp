@@ -134,12 +134,6 @@
 		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/ImplicitUpwindScheme.h">
 			<Option target="High_Performance_Technical_Computing"/>
 		</Unit>
-		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/Lax_Wendroff.cpp">
-			<Option target="High_Performance_Technical_Computing"/>
-		</Unit>
-		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/Lax_Wendroff.h">
-			<Option target="High_Performance_Technical_Computing"/>
-		</Unit>
 		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/MathFunctions.cpp">
 			<Option target="High_Performance_Technical_Computing"/>
 		</Unit>
@@ -150,12 +144,6 @@
 			<Option target="High_Performance_Technical_Computing"/>
 		</Unit>
 		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/Matrix.h">
-			<Option target="High_Performance_Technical_Computing"/>
-		</Unit>
-		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/Richtmyer_multi_step.cpp">
-			<Option target="High_Performance_Technical_Computing"/>
-		</Unit>
-		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/Richtmyer_multi_step.h">
 			<Option target="High_Performance_Technical_Computing"/>
 		</Unit>
 		<Unit filename="/home/wik/Pulpit/Dokumenty Wiktora/V rok/Cranfield/High Performance Technical Computing/main.cpp">

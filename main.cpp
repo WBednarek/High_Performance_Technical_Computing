@@ -25,7 +25,7 @@ using std::endl;
 //Own display namespace with user friendly displaying functions
 using namespace display;
 
-
+//Decimal separator Template
 template<typename CharT>
 class DecimalSeparator : public std::numpunct<CharT> {
 public:
@@ -42,6 +42,7 @@ private:
 };
 
 
+//Displaying vector
 template<typename T>
 std::ostream &operator<<(std::ostream &out, const std::vector<T> &v) {
     std::copy(v.begin(), v.end(), std::ostream_iterator<T>(out, "\n"));
@@ -93,28 +94,6 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
     crankParallel.solve(numberOfBoundaryConditionSet);
 
 
-
-
-
-
-    /*
-     *
-
-
-     osImplicitScheme.imbue(std::locale(std::cout.getloc(), new DecimalSeparator<char>(',')));
-
-     std::string implicitUpwindSchemeFileName =
-            path + getInitialBoundaryConditionName(numberOfBoundaryConditionSet) + "_" +
-            implicitUpwindScheme.getName() + "Results_t=" + streams[2].str() + "_points=" + streams[3].str() + "_CFL=" +
-            streams[4].str() + typeOfExtension;
-    const char *CharImplicitUpwindSchemeFileName = implicitUpwindSchemeFileName.c_str();
-
-    osImplicitScheme.open(CharImplicitUpwindSchemeFileName);
-
-    osImplicitScheme << implicitUpwindScheme.getLastImplicitMatrixColumn();
-
-     osImplicitScheme.close();
-    */
 
 
     //Generating open files
@@ -189,8 +168,6 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
 
 
 
-    //std::string path = "C:/Users/Domowy/Desktop/Results/";
-    //Open/create file with selected extension. It clold be for instance exel files extensions (.xls; .xlsx).
     //Single
     osGeneralScheme.open(CharGeneralSchemeFileName);
     osExplicitScheme.open(CharUpwindSchemeFileName);
@@ -203,7 +180,7 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
 
 
 
-    //Saving schemes calculated results
+    //Saving schemes calculated results, only one processor can do that
 
     int myRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
@@ -223,15 +200,12 @@ void runSchemes(int numberOfBoundaryConditionSet, vector<double> initialSettings
         osCrankParallel << crankParallel.getCrankResutls();
 
 
-
         //Closing all opened streams at the end
         osGeneralScheme.close();
         osExplicitScheme.close();
         osImplicitScheme.close();
-
         osImplicitParallel.close();
         osParallel.close();
-
         osCrankParallel.close();
 
     }
@@ -252,13 +226,11 @@ int main(int argc, char *argv[]) {
 
 
     //Number of boundary condition set. 1 for sign boundary set type ; 2 for exp boundary set type
-//    vector<int> setNumber;
-//    setNumber.push_back(1);
+
     int setNumber = 2;
 
 
     //Initial setings values are respectively: xMin, xMax, time, number of spacePoints, CFL value
-
 
     cout << "Actual parameters are: ";
 
@@ -269,44 +241,14 @@ int main(int argc, char *argv[]) {
 
     vector<double> courantNumberSet;
     courantNumberSet.push_back(0.5);
-    double courantNumber = 0.7;
+    double courantNumber = 0.999;
 
 
-    double numOfPoints = 1000;
+    double numOfPoints = 10000;
 
 
     double simulationTime = 5;
-/*
-    for (int v = 0; v < setNumber.size(); ++v)
-    {
-        for (int j = 0; j < pointsSet.size(); ++j)
-        {
 
-            for (int i = 0; i < sizeof(timeSet) / sizeof(timeSet[0]); ++i)
-            {
-
-                for (int k = 0; k < courantNumberSet.size(); ++k)
-                {
-                    vector<double> initialSettings;
-                    initialSettings.push_back(-50);
-                    initialSettings.push_back(50);
-                    initialSettings.push_back(simulationTime);
-                    initialSettings.push_back(numOfPoints);
-                    initialSettings.push_back(courantNumber);
-
-                    runSchemes(setNumber[v], initialSettings, typeOfExtension);
-
-
-                }
-
-            }
-
-
-        }
-
-
-    }
-*/
 
     vector<double> initialSettings;
     initialSettings.push_back(-50);
@@ -325,7 +267,5 @@ int main(int argc, char *argv[]) {
 
 }
 
-
-//system("pause");
 
 	

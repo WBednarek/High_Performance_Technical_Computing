@@ -22,16 +22,12 @@ set(SOURCE_FILES
         GeneralScheme.h
         ImplicitUpwindScheme.cpp
         ImplicitUpwindScheme.h
-        Lax_Wendroff.cpp
-        Lax_Wendroff.h
         main.cpp
         main.h
         MathFunctions.cpp
         MathFunctions.h
         Matrix.cpp
         Matrix.h
-        Richtmyer_multi_step.cpp
-        Richtmyer_multi_step.h
         ExplicitUpwindParallel.cpp
         ExplicitUpwindParallel.h
         ImplicitParallel.h
