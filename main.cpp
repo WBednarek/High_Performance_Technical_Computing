@@ -245,8 +245,6 @@ int main(int argc, char *argv[]) {
 
 
     double numOfPoints = 10000;
-
-
     double simulationTime = 5;
 
 
